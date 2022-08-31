@@ -1,5 +1,6 @@
 const express = require("express");
 const {google } = require("googleapis");
+const GoogleSheetsService = require("./services/GoogleSheetsService");
 const HTTP_PORT = process.env.HTTP_PORT || 3001;
 
 const app = express();
@@ -48,6 +49,8 @@ app.get("/metadata", async (req, res) => {
 
 //pega os alores das resposta da planilha
 app.get("/getRows", async (req, res) => {
+
+    const googleSheetsService = new GoogleSheetsService().seartAllRows();
     const { googleSheets, auth, spreadsheetId } = await getAuthSheets();
 
     const getRows = await googleSheets.spreadsheets.values.get({
