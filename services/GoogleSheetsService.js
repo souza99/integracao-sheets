@@ -32,7 +32,7 @@ async function GoogleSheetsService() {
   const { googleSheets, auth, spreadsheetId } = await getAuthSheets();
 
   let rodaRequest = true;
-  let listafinal = [{}];
+  let listafinal = [];
   let pagina = 1;
 
     while (rodaRequest) {
@@ -44,7 +44,8 @@ async function GoogleSheetsService() {
                 range: `Página${pagina}!A2:F1000`,
                 valueRenderOption: "UNFORMATTED_VALUE",
               });
-                listafinal.push(getRows.data);
+               
+                listafinal.push(...getRows.data.values);
                 pagina += 1;
 
         }catch(e){
@@ -52,8 +53,23 @@ async function GoogleSheetsService() {
         }
     }
 
-    console.log(listafinal);
-    return listafinal;
+    const novaLista = [];
+
+    for(const i of listafinal) { 
+
+      if ((String(i[2]).indexOf('@') > -1) &&
+       !(String(i[2].indexOf('@gmail')) > -1) &&
+        !(String(i[2].indexOf('@hotmail')) > -1) &&
+         !(String(i[2].indexOf('@outlook')) > -1) ) {
+        console.log('exibindo valor ', i[2]);
+        novaLista.push(i);
+      }
+
+     
+    }
+
+    console.log(novaLista);
+    return novaLista;
 }
 
 module.exports = GoogleSheetsService;
