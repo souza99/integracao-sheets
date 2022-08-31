@@ -53,7 +53,7 @@ app.get("/getRows", async (req, res) => {
     const getRows = await googleSheets.spreadsheets.values.get({
         auth,
         spreadsheetId,
-        range: "Página2",
+        range: "Página1!A2:F1000",
         valueRenderOption: "UNFORMATTED_VALUE",
     })
 
