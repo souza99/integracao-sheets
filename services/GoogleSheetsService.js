@@ -33,7 +33,7 @@ async function GoogleSheetsService() {
   const { googleSheets, auth, spreadsheetId } = await getAuthSheets();
 
   let rodaRequest = true;
-  let listafinal = [];
+  let listaTodosContatos = [];
   let pagina = 1;
 
   while (rodaRequest) {
@@ -46,7 +46,7 @@ async function GoogleSheetsService() {
         valueRenderOption: "UNFORMATTED_VALUE",
       });
 
-      listafinal.push(...getRows.data.values);
+      listaTodosContatos.push(...getRows.data.values);
       pagina += 1;
 
     } catch (e) {
@@ -56,20 +56,21 @@ async function GoogleSheetsService() {
 
   const novaLista = [];
 
-  for (const i of listafinal) {
+  for (const i of listaTodosContatos) {
 
+    //valida se o contato tem email valido e nome
     if ((String(i[2]).indexOf('@') > -1) &&
       !(String(i[2].indexOf('@gmail')) > -1) &&
       !(String(i[2].indexOf('@hotmail')) > -1) &&
-      !(String(i[2].indexOf('@outlook')) > -1)) {
-      console.log('exibindo valor ', i[2]);
+      !(String(i[2].indexOf('@outlook')) > -1) &&
+      !(String(i[1].indexOf('')) == -1)) {
       novaLista.push(i);
     }
 
   }
 
   const retornoHubContacts = await postHubSportCmr(novaLista);
-  console.log("QQQQQQQQQ",retornoHubContacts);
+
   return retornoHubContacts;
 }
 
@@ -97,7 +98,7 @@ async function GoogleSheetsService() {
 
 const postHubSportCmr = (novaLista) => {
 
-  const ACCESS_TOKEN = "pat-na1-fcb92bc0-ac4a-4b46-808b-2d04a1d552a9";
+  const ACCESS_TOKEN = "pat-na1-b8eb67ae-4786-411b-9b5c-5f8cbcb650b1";
 
   let fazpost = true;
 
@@ -118,9 +119,9 @@ const postHubSportCmr = (novaLista) => {
           properties: [
             { property: 'email', value: `${i[2]}` },
             { property: 'firstname', value: `${i[1]}` },
-            { property: 'website', value: `${i[0]}` },
-            { property: 'company', value: `${i[3]}` },
-            { property: 'phone', value: `${i[4]}` },
+            { property: 'website', value: `${i[4]}` },
+            { property: 'company', value: `${i[0]}` },
+            { property: 'phone', value: `${i[3]}` },
           ]
         }
       };
@@ -136,6 +137,8 @@ const postHubSportCmr = (novaLista) => {
     fazpost = false;
 
   }
+
+  return
 
 }
 
