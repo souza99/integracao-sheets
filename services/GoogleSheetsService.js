@@ -68,11 +68,9 @@ async function GoogleSheetsService() {
 
   }
 
-  //console.log(novaLista);
-
-  const retornoHubContacts = await postHubSportCmr();
-  console.log(retornoHubContacts);
-  return novaLista;
+  const retornoHubContacts = await postHubSportCmr(novaLista);
+  console.log("QQQQQQQQQ",retornoHubContacts);
+  return retornoHubContacts;
 }
 
 // const postHubSportCmr = () => {
@@ -97,68 +95,47 @@ async function GoogleSheetsService() {
 //POST
 
 
-const postHubSportCmr = () => {
-
-  // const ACCESS_TOKEN = "pat-na1-fcb92bc0-ac4a-4b46-808b-2d04a1d552a9";
-  // var request = require("request");
-
-  // var options = {
-  //   method: 'POST',
-  //   url: 'https://api.hubapi.com/contacts/v1/contact/',
-  //   qs: { hapikey: 'demo' },
-  //   headers:
-  //   {
-  //     'Content-Type': 'application/json',
-  //     'Authorization': `Bearer ${ACCESS_TOKEN}`,
-  //   },
-  // body:
-  //   {
-  //     properties:
-  //       [{ property: 'email', value: {} },
-  //       { property: 'firstname', value: {} },
-  //       { property: 'website', value: {} },
-  //       { property: 'company', value: {} },
-  //       { property: 'phone', value: {} },]
-  //   },
-  //   json: true
-  // };
-
-  // request(options, function (error, response, body) {
-  //   if (error) throw new Error(error);
-
-  //   console.log(body);
-  // });
+const postHubSportCmr = (novaLista) => {
 
   const ACCESS_TOKEN = "pat-na1-fcb92bc0-ac4a-4b46-808b-2d04a1d552a9";
 
-  const options = {
-    method: 'POST',
-    url: 'https://api.hubapi.com/contacts/v1/contact/',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${ACCESS_TOKEN} `,
-    },
-    data: {
-      properties: [
-        { property: 'email', value: 'testingapis@hubspot.com' },
-        { property: 'firstname', value: 'Adrian' },
-        { property: 'lastname', value: 'Mott' },
-        { property: 'website', value: 'http://hubspot.com' },
-        { property: 'company', value: 'HubSpot' },
-        { property: 'phone', value: '555-122-2323' },
-        { property: 'address', value: '25 First Street' },
-        { property: 'city', value: 'Cambridge' },
-        { property: 'state', value: 'MA' },
-        { property: 'zip', value: '02139' },
-      ]
-    }
-  };
+  let fazpost = true;
 
-  return axios.request(options).then(function (response) {
-    console.log(response.data);
-  }).catch(function (error) {
-    console.error(error);
-  });
+  while (fazpost) {
+
+    //roda todos os itens para inserir
+    for (const i of novaLista) {
+      console.log("Roda a lista", i[2]);
+      //monta a requisição
+      const options = {
+        method: 'POST',
+        url: 'https://api.hubapi.com/contacts/v1/contact/',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${ACCESS_TOKEN}`,
+        },
+        data: {
+          properties: [
+            { property: 'email', value: `${i[2]}` },
+            { property: 'firstname', value: `${i[1]}` },
+            { property: 'website', value: `${i[0]}` },
+            { property: 'company', value: `${i[3]}` },
+            { property: 'phone', value: `${i[4]}` },
+          ]
+        }
+      };
+
+      axios.request(options).then(function (response) {
+        console.log(response.data);
+      }).catch(function (error) {
+        console.error(error);
+      });
+
+    }
+
+    fazpost = false;
+
+  }
 
 }
 
